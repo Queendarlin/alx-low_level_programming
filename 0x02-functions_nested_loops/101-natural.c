@@ -10,7 +10,7 @@ int main(void)
 	int sum_3_5 = 0;
 	int c;
 
-	for (c = 0; c < 10; c++)
+	for (c = 0; c < 1024; c++)
 	{
 		if (c % 3 == 0 || c % 5 == 0)
 		sum_3_5 = sum_3_5 + c;

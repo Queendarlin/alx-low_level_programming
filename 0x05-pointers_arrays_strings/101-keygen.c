@@ -10,27 +10,23 @@
 int main(void)
 {
 	int password[100];
-	int index, sum, diff;
+	int index, num, diff;
 
-	sum = 0;
-
+	num = 0;
 	srand(time(NULL));
 
 	for (index = 0; index < 100; index++)
 	{
 		password[index] = rand() % 78;
-		sum += password[index];
-		putchar(' ' + password[index]);
-		if ((2772 - sum) < 78)
+		num += (password[index] + '0');
+		putchar(password[index] + '0');
+		if ((2772 - num) - '0' < 78)
 		{
-			diff = 2772 - sum;
-			sum += diff;
-			putchar(' ' + diff);
+			diff = 2772 - num - '0';
+			num += diff;
+			putchar(diff + '0');
 			break;
 		}
 	}
-
-	putchar('\n');
-
 	return (0);
 }

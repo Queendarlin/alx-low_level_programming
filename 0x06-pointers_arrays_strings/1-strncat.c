@@ -2,10 +2,10 @@
 
 /**
  * *_strncat - Function to concatenate two strings
- * @dest: The string to be concatenated
- * @src: The second string to be concatenated
+ * @dest: The string receiving copied string
+ * @src: The string that will be copied
  * @n: the number of bytes
- * Return: Returns the value of the concatenate
+ * Return: Returns the value of dest
  */
 char *_strncat(char *dest, char *src, int n)
 {

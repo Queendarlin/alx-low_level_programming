@@ -33,13 +33,9 @@ void reverse_string(char *str)
  */
 char *infinite_add(char *n1, char *n2, char *r, int size_r)
 {
-	int carry = 0;
-	int index_n1 = 0;
-	int index_n2 = 0;
-	int result_digits = 0;
-	int value1 = 0;
-	int value2 = 0;
-	int holder = 0;
+	int index_n1 = 0, index_n2 = 0;
+	int result_digits = 0, carry = 0;
+	int value1 = 0,	value2 = 0, holder = 0;
 
 	while (*(n1 + index_n1) != '\0')
 		index_n1++;

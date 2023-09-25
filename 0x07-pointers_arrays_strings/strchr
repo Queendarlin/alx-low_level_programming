@@ -1,0 +1,5 @@
+trchr - Locates the first occurrence of a character in a string.
+ * @s: The string to search within.
+ * @c: The character to locate.
+ *
+ * Return: A pointer to the 

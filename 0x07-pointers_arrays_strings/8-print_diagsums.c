@@ -2,7 +2,7 @@
 
 /**
  * print_diagsums - Function to print sum of two diagonals of a square matrix
- * @a: Pointer to the square matrix
+ * @a: Pointer to the square matrix as 1D array of integers
  * @size: number of rows or columns showing the size of the matrix
  */
 void print_diagsums(int *a, int size)

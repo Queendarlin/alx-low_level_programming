@@ -9,29 +9,35 @@
  */
 char *string_nconcat(char *s1, char *s2, unsigned int n)
 {
-	unsigned int s1length = 0;
-	unsigned int s2length = 0;
 	char *conc;
-	unsigned int index;
+	unsigned int index1 = 0, index2 = 0, s1length = 0, s2length = 0;
 
-	if (s1 == NULL)
-		s1 = "";
-	if (s2 == NULL)
-		s2 = "";
-	for (index = 0; s1[index] != '\0'; index++)
+	while (s1 && s1[s1length])
 		s1length++;
-	for (index = 0; s2[index] != '\0'; index++)
+	while (s2 && s2[s2length])
 		s2length++;
-	if (n >= s2length)
-		n = s2length;
-	conc = malloc(sizeof(char) * (s1length + n) + 1);
-	if (conc == NULL)
+
+	if (n < s2length)
+		conc = malloc(sizeof(char) * (s1length + n + 1));
+	else
+		conc = malloc(sizeof(char) * (s1length + s2length + 1));
+
+	if (!conc)
 		return (NULL);
-	for (index = 0; index < s1length; index++)
-		conc[index] = s1[index];
-	for (index = 0; index < s2length; index++)
-		conc[s1length + index] = s2[index];
-	conc[s1length + n] = '\0';
+
+	while (index1 < s1length)
+	{
+		conc[index1] = s1[index1];
+		index1++;
+	}
+
+	while (n < s2length && index1 < (s1length + n))
+		conc[index1++] = s2[index2++];
+
+	while (n >= s2length && index1 < (s1length + s2length))
+		conc[index1++] = s2[index2++];
+
+	conc[index1] = '\0';
 
 	return (conc);
 }

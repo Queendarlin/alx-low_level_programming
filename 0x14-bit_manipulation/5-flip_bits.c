@@ -7,3 +7,14 @@
  * Return: The number of flipped bit
  */
 unsigned int flip_bits(unsigned long int n, unsigned long int m)
+{
+	unsigned long int flip = n ^ m;
+	unsigned int count_bit = 0;
+
+	while (flip > 0)
+	{
+		count_bit += flip & 1;
+		flip >>= 1;
+	}
+	return (count_bit);
+}

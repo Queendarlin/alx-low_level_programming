@@ -1,12 +1,9 @@
 #include "main.h"
 
-#define BUFSIZE 1024
-
 /**
- * create_buff - Allocates 1024 bytes for a buffer.
- * @filename: The name of the file buffer is storing chars for.
- *
- * Return: A pointer to the newly-allocated buffer.
+ * create_buff - Function to allocate 1024 bytes for a buffer
+ * @filename: The name of the file
+ * Return: The allocated buffer
  */
 char *create_buff(char *filename)
 {
@@ -25,16 +22,16 @@ char *create_buff(char *filename)
 }
 
 /**
- * close_fd - Closes file descriptors.
- * @file_D: The file descriptor to be closed.
+ * close_fd - Function to close the file descriptor
+ * @file_D: The file descriptor that needs to be closed
  */
 void close_fd(int file_D)
 {
-	int c;
+	int temp_close;
 
-	c = close(file_D);
+	temp_close = close(file_D);
 
-	if (c == -1)
+	if (temp_close == -1)
 	{
 		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", file_D);
 		exit(100);
@@ -42,16 +39,10 @@ void close_fd(int file_D)
 }
 
 /**
- * main - Copies the contents of a file to another file.
- * @argc: The number of arguments supplied to the program.
- * @argv: An array of pointers to the arguments.
- *
- * Return: 0 on success.
- *
- * Description: If the argument count is incorrect - exit code 97.
- * If file_from does not exist or cannot be read - exit code 98.
- * If file_to cannot be created or written to - exit code 99.
- * If file_to or file_from cannot be closed - exit code 100.
+ * main - Function to copy a file content to another file
+ * @argc: The number of arguments
+ * @argv:  The second argument
+ * Return: 0 on success
  */
 int main(int argc, char *argv[])
 {

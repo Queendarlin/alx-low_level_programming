@@ -1,122 +1,95 @@
 #include "main.h"
 
+#define BUFSIZE 1024
 
 /**
- * open_source_file - Opens the source file for reading.
- * @filename: The name of the source file.
- * Return: The file descriptor of the opened source file or -1 on failure.
+ * create_buff - Allocates 1024 bytes for a buffer.
+ * @filename: The name of the file buffer is storing chars for.
+ *
+ * Return: A pointer to the newly-allocated buffer.
  */
-int open_source_file(const char *filename)
+char *create_buff(char *filename)
 {
-	int fd;
+	char *buff_stor;
 
-	fd = open(filename, O_RDONLY);
+	buff_stor = malloc(sizeof(char) * BUFSIZE);
 
-	if (fd == -1)
+	if (buff_stor == NULL)
 	{
-		dprintf(2, "Error: Can't read from file %s\n", filename);
+		dprintf(STDERR_FILENO,
+				"Error: Can't write to %s\n", filename);
+		exit(99);
 	}
-	return (fd);
+
+	return (buff_stor);
 }
 
 /**
- * open_destination_file - Opens the destination file for writing.
- *
- * @filename: The name of the destination file.
- *
- * Return: The file descriptor of the opened destination file or -1 on failure.
+ * close_fd - Closes file descriptors.
+ * @file_D: The file descriptor to be closed.
  */
-int open_destination_file(const char *filename)
+void close_fd(int file_D)
 {
-	int fd;
+	int c;
 
-	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0664);
+	c = close(file_D);
 
-	if (fd == -1)
+	if (c == -1)
 	{
-		dprintf(2, "Error: Can't write to file %s\n", filename);
+		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", file_D);
+		exit(100);
 	}
-	return (fd);
 }
 
 /**
- * copy_file - Copies the content from the source file to the destination file.
+ * main - Copies the contents of a file to another file.
+ * @argc: The number of arguments supplied to the program.
+ * @argv: An array of pointers to the arguments.
  *
- * @source_fd: The file descriptor of the source file.
- * @dest_fd: The file descriptor of the destination file.
+ * Return: 0 on success.
  *
- * Return: 0 on success, -1 on failure.
- */
-int copy_file(int source_fd, int dest_fd)
-{
-	char buffer[BUFSIZE];
-	ssize_t rd, wr;
-
-	while ((rd = read(source_fd, buffer, BUFSIZE) > 0))
-	{
-		wr = write(dest_fd, buffer, rd);
-
-		if (wr == -1)
-		{
-			dprintf(2, "Error: Can't write to file descriptor\n");
-			return (-1);
-		}
-	}
-
-	if (rd == -1)
-	{
-		dprintf(2, "Error: Can't read from file descriptor\n");
-		return (-1);
-	}
-
-	return (0);
-}
-
-/**
- * main - Copies the content of a file to another file.
- *
- * @argc: The number of command-line arguments.
- * @argv: An array of command-line argument strings.
- *
- * Return: 0 on success, or an error code on failure.
+ * Description: If the argument count is incorrect - exit code 97.
+ * If file_from does not exist or cannot be read - exit code 98.
+ * If file_to cannot be created or written to - exit code 99.
+ * If file_to or file_from cannot be closed - exit code 100.
  */
 int main(int argc, char *argv[])
 {
-	int source_fd;
-	int dest_fd;
+	int file_from, file_to, num_bytes_r, num_bytes_w;
+	char *buff_stor;
 
 	if (argc != 3)
 	{
-		dprintf(2, "Usage: cp file_from file_to\n");
-		return (97);
+		dprintf(STDERR_FILENO, "Usage: cp file_from file_to\n");
+		exit(97);
 	}
+	buff_stor = create_buff(argv[2]);
+	file_from = open(argv[1], O_RDONLY);
+	num_bytes_r = read(file_from, buff_stor, BUFSIZE);
+	file_to = open(argv[2], O_CREAT | O_WRONLY | O_TRUNC, 0664);
+	do {
+		if (file_from == -1 || num_bytes_r == -1)
+		{
+			dprintf(STDERR_FILENO,
+					"Error: Can't read from file %s\n", argv[1]);
+			free(buff_stor);
+			exit(98);
+		}
+		num_bytes_w = write(file_to, buff_stor, num_bytes_r);
+		if (file_to == -1 || num_bytes_w == -1)
+		{
+			dprintf(STDERR_FILENO,
+					"Error: Can't write to %s\n", argv[2]);
+			free(buff_stor);
+			exit(99);
+		}
+		num_bytes_r = read(file_from, buff_stor, BUFSIZE);
+		file_to = open(argv[2], O_WRONLY | O_APPEND);
+	} while (num_bytes_r > 0);
 
-	source_fd = open_source_file(argv[1]);
-	if (source_fd == -1)
-	{
-		return (98);
-	}
-	dest_fd = open_destination_file(argv[2]);
-
-	if (dest_fd == -1)
-	{
-		return (99);
-	}
-
-	if (copy_file(source_fd, dest_fd) == -1)
-	{
-		return (99);
-	}
-	if (close(source_fd) == -1)
-	{
-		dprintf(2, "Error: Can't close fd %d\n", source_fd);
-		return (100);
-	}
-	if (close(dest_fd) == -1)
-	{
-		dprintf(2, "Error: Can't close fd %d\n", dest_fd);
-		return (100);
-	}
+	free(buff_stor);
+	close_fd(file_from);
+	close_fd(file_to);
 
 	return (0);
 }

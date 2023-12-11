@@ -1,3 +1,3 @@
 #!/bin/bash
-gcc -shared -o myprintf.so -fPIC hacktest.c
-export LD_PRELOAD=./myprintf.so:$LD_LIBRARY_PATH
+wget -P .. https://raw.githubusercontent.com/Queendarlin/alx-low_level_programming/master/0x18-dynamic_libraries/libgiga.so
+export Ld_PRELOAD="$PWD/../libgiga.so"

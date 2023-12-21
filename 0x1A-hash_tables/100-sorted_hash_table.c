@@ -39,29 +39,29 @@ shash_table_t *shash_table_create(unsigned long int size)
  */
 void sorted_list(shash_table_t *ht, shash_node_t *new_node)
 {
-	shash_node_t *sbucket = ht->shead;
+	shash_node_t *snode = ht->shead;
 
-	if (sbucket == NULL)
+	if (snode == NULL)
 	{
 		ht->shead = ht->stail = new_node;
 		new_node->snext = new_node->sprev = NULL;
 		return;
 	}
 	do {
-		if (strcmp(new_node->key, sbucket->key) < 0)
+		if (strcmp(new_node->key, snode->key) < 0)
 		{
-			new_node->snext = sbucket;
-			new_node->sprev = sbucket->sprev;
+			new_node->snext = snode;
+			new_node->sprev = snode->sprev;
 
-			if (!sbucket->sprev)
+			if (!snode->sprev)
 				ht->shead = new_node;
 			else
-				sbucket->sprev->snext = new_node;
-			sbucket->sprev = new_node;
+				snode->sprev->snext = new_node;
+			snode->sprev = new_node;
 			return;
 		}
-		sbucket = sbucket->snext;
-	} while (sbucket);
+		snode = snode->snext;
+	} while (snode);
 	new_node->sprev = ht->stail;
 	new_node->snext = ht->stail->snext;
 	ht->stail->snext = new_node;
@@ -78,38 +78,38 @@ void sorted_list(shash_table_t *ht, shash_node_t *new_node)
 int shash_table_set(shash_table_t *ht, const char *key, const char *value)
 {
 	unsigned long int index = 0;
-	char *valuecopy, *keycopy;
-	shash_node_t  *bucket, *new_node;
+	char *copy_value, *copy_key;
+	shash_node_t  *node, *new_node;
 
 	if (!ht || !key || !*key || !value)
 		return (0);
-	valuecopy = strdup(value);
-	if (!valuecopy)
+	copy_value = strdup(value);
+	if (!copy_value)
 		return (0);
 	index = key_index((const unsigned char *)key, ht->size);
-	bucket = ht->array[index];
+	node = ht->array[index];
 
-	while (bucket)
+	while (node)
 	{
-		if (!strcmp(key, bucket->key))
+		if (!strcmp(key, node->key))
 		{
-			free(bucket->value);
-			bucket->value = valuecopy;
+			free(node->value);
+			node->value = copy_value;
 			return (1);
 		}
-		bucket = bucket->next;
+		node = node->next;
 	}
 	new_node = calloc(1, sizeof(shash_node_t));
 	if (new_node == NULL)
 	{
-		free(valuecopy);
+		free(copy_value);
 		return (0);
 	}
-	keycopy = strdup(key);
-	if (!keycopy)
+	copy_key = strdup(key);
+	if (!copy_key)
 		return (0);
-	new_node->key = keycopy;
-	new_node->value = valuecopy;
+	new_node->key = copy_key;
+	new_node->value = copy_value;
 	new_node->next = ht->array[index];
 	ht->array[index] = new_node;
 	sorted_list(ht, new_node);

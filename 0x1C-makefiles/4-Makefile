@@ -7,15 +7,15 @@ RM = rm -f
 RM_TEMP = *~
 
 all: $(OBJ)
-        $(CC) $(OBJ) -o $(NAME)
+	$(CC) $(OBJ) -o $(NAME)
 
 .PHONY: clean oclean fclean re
 
 clean:
-        $(RM) $(RM_TEMP) $(NAME)
+	$(RM) $(RM_TEMP) $(NAME)
 
 oclean:
-        $(RM) $(OBJ)
+	$(RM) $(OBJ)
 
 fclean: clean oclean
 

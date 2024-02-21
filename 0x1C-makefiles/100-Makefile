@@ -1,0 +1,40 @@
+CC = gcc
+SRC = main.c school.c
+OBJ = $(SRC:.c=.o)
+NAME = school
+
+.PHONY: all clean oclean fclean re
+
+all: $(NAME)
+
+$(NAME): $(OBJ)
+    $(CC) -o $@ $(OBJ)
+
+clean:
+	$(RM) *~ $(NAME)
+
+oclean:
+	$(RM) $(OBJ)
+
+fclean: clean oclean
+
+re: fclean all
+
+main.o: main.c m.h
+    $(CC) -c $< -o $@ -Wall -Werror -Wextra -pedantic
+
+school.o: school.c m.h
+    $(CC) -c $< -o $@ -Wall -Werror -Wextra -pedantic
+
+%: %.c
+    $(CC) -o $@ $< -Wall -Werror -Wextra -pedantic
+
+%: %.o
+    $(CC) -o $@ $<
+
+ifneq ($(wildcard m.h),)
+else
+$(error m.h not found)
+endif
+
+RM := rm -f

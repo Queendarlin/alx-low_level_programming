@@ -40,7 +40,7 @@ typedef struct skiplist_s
 	struct skiplist_s *express;
 } skiplist_t;
 
-
+int advanced_binary_recursive(int *array, size_t left, size_t right, int value);
 int _binary_search(int *array, size_t left, size_t right, int value);
 void print_array(int *array, size_t start, size_t end);
 int linear_search(int *array, size_t size, int value);
